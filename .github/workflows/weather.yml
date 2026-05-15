@@ -1,0 +1,38 @@
+name: Daily Tel Aviv Weather Email
+
+on:
+  schedule:
+    # Runs at 05:00 and 06:00 UTC every day.
+    # One of these corresponds to 08:00 Israel time year-round
+    # (05:00 UTC in summer DST, 06:00 UTC in winter).
+    # The shell check below filters to whichever one is currently 08:00 IL.
+    - cron: '0 5,6 * * *'
+  workflow_dispatch:  # allow manual run from the Actions tab
+
+jobs:
+  send-weather:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Send weather email (only if it's 08:00 in Israel)
+        env:
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: |
+          HOUR_IL=$(TZ=Asia/Jerusalem date +%H)
+          if [ "$HOUR_IL" = "08" ]; then
+            echo "Israel time is 08:xx — sending email."
+            python weather_agent.py
+          else
+            echo "Israel time is ${HOUR_IL}:xx — not 08, skipping this run."
+          fi

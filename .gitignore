@@ -1,0 +1,15 @@
+# Secrets — NEVER commit these
+.env
+
+# macOS junk
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+
+# Logs
+*.log

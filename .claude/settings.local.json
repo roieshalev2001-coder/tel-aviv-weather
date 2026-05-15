@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"import smtplib; print\\(''smtplib ok''\\)\")",
+      "Bash(python3 -c \"import email; print\\(''email ok''\\)\")",
+      "Bash(pip3 show requests python-dotenv)",
+      "Bash(pip show requests python-dotenv)",
+      "Bash(python3 -c \"import zoneinfo; print\\(''zoneinfo ok''\\)\")",
+      "Bash(python3 -c \"from datetime import datetime; import zoneinfo; tz = zoneinfo.ZoneInfo\\(''Asia/Jerusalem''\\); print\\(datetime.now\\(tz\\)\\)\")",
+      "Bash(python3 -c \":*)",
+      "Read(//Users/roieshalev/.claude/**)",
+      "Bash(python3 weather_agent.py)"
+    ]
+  }
+}
