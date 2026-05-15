@@ -8,6 +8,12 @@ on:
     # The shell check below filters to whichever one is currently 08:00 IL.
     - cron: '0 5,6 * * *'
   workflow_dispatch:  # allow manual run from the Actions tab
+    inputs:
+      force_send:
+        description: 'Send email regardless of the current hour'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   send-weather:
@@ -30,8 +36,9 @@ jobs:
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
         run: |
           HOUR_IL=$(TZ=Asia/Jerusalem date +%H)
-          if [ "$HOUR_IL" = "08" ]; then
-            echo "Israel time is 08:xx — sending email."
+          FORCE="${{ inputs.force_send }}"
+          if [ "$HOUR_IL" = "08" ] || [ "$FORCE" = "true" ]; then
+            echo "Sending email (hour=$HOUR_IL, force=$FORCE)."
             python weather_agent.py
           else
             echo "Israel time is ${HOUR_IL}:xx — not 08, skipping this run."
